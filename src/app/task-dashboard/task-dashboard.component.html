@@ -1,0 +1,112 @@
+<nav class="navbar navbar-dark bg-dark">
+        <div class="container-fluid">
+          <h1 style="color:aliceblue;">Task Manager</h1>
+
+          <!-- searchEngine -->
+          <nav class="navbar">
+            <input class="form-control" type="search" id="searchbtn" name="title" [(ngModel)]="title" (ngModelChange)="Search()" placeholder="">
+
+          </nav>
+      
+        <div class="d-flex">
+          <button class="btn btn-success" id="addTaskBtn" data-bs-target="#addTaskModal" data-bs-toggle="modal"> Add Task</button>
+      
+        </div>
+        </div>
+      </nav>
+      
+      <table class="table mt-3">
+      
+        <thead>
+          <tr>
+            <th scope="col"> Title</th>
+            <th scope="col"> Status</th>
+            <th scope="col"> Priority</th>
+            <th scope="col"> Date</th>
+            <th scope="col"> Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let task of tasks | paginate: { itemsPerPage:5,currentPage:p};" >
+              <!-- <tr *ngFor="let task of tasks; index as i" > -->
+          <td> 
+            <span><del *ngIf="task.status=='Done'">{{task.title}}</del></span>  
+            <span *ngIf="task.status!='Done'"> {{task.title}} </span>
+           </td>
+
+          <td> 
+              <span><del *ngIf="task.status=='Done'">{{task.status}}</del></span>  
+              <span *ngIf="task.status!='Done'"> {{task.status}} </span>
+          </td>
+
+          <td> 
+              <span><del *ngIf="task.priority=='Done'">{{task.priority}}</del></span>  
+              <span *ngIf="task.priority!='Done'"> {{task.priority}} </span>
+          </td>
+          
+          <td> {{task.date}} </td>
+          <td> 
+            <button class="btn btn-info" id="editBtn" data-bs-toggle="editModal" [routerLink]="['edit', task._id]">edit</button>
+            <button class="btn btn-danger mx-3" id="deleteBtn" (click)="deleteTask(i)">delete</button>
+          </td>
+          
+          </tr>
+        </tbody>
+        <pagination-controls (pageChange)="p= $event"></pagination-controls>
+      </table>
+      
+        <div class="modal fade" id="addTaskModal" tabindex="-1" aria-labelledby="addTaskModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="addTaskModalLabel">Add task</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                
+      
+      
+      
+      
+                  <form [formGroup]="addForm" (ngSubmit)="addTask()">
+                      <div class="mb-3">
+                        <label for="title" class="form-label">Title</label>
+                        <input formControlName="title" type="text" class="form-control" id="taskTitle">
+                        <small *ngIf="addForm.get('title').invalid && addForm.get('title').touched" class="text-danger">Title is Required</small>
+                      </div>
+                      <div class="mb-3">
+                          <label for="taskStatus" class="form-label">Status</label>
+                          <select class="form-control" formControlName="status">
+                            <option> New </option>
+                            <option> On progress </option>
+                            <option> Done </option>
+                          </select>
+                          <small *ngIf="addForm.get('status').invalid && addForm.get('status').touched" class="text-danger">Status is Required</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="taskPriority" class="form-label">Priority</label>
+                            <select formControlName="priority" class="form-control">
+                              <option> High </option>
+                              <option> Medium </option>
+                              <option> Low </option>
+                            </select>
+                            <small *ngIf="addForm.get('priority').invalid && addForm.get('priority').touched" class="text-danger">Priority is Required</small>
+                          </div>
+      
+                        <div class="mb-3">
+                            <label for="taskDate" class="form-label">Date</label>
+                            <input formControlName="date" type="date"  class="form-control" id="taskDate">
+                            <small *ngIf="addForm.get('date').invalid && addForm.get('date').touched" class="text-danger">Date is Required</small>
+                          </div>
+      
+                    </form>
+      
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button [disabled]="addForm.invalid" type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="addTask()">Create Task</button>
+              </div>
+            </div>
+          </div>
+        </div>
