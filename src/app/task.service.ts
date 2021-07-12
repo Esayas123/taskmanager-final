@@ -6,8 +6,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class TaskService {
-  // apiUrl  = "https://port-fixed.herokuapp.com";
-  apiUrl  = "http://localhost:3000";
+   apiUrl  = "https://port-fixed.herokuapp.com";
+  //apiUrl  = "http://localhost:3000";
   constructor(private http:HttpClient) { }
 
   addTask(task:Task){
